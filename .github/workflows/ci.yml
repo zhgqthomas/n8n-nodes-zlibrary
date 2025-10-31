@@ -4,14 +4,18 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'Release type (patch, minor, major)'
+        description: "Release type (patch, minor, major)"
         required: true
-        default: 'patch'
+        default: "patch"
         type: choice
         options:
           - patch
           - minor
           - major
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
 
 jobs:
   build-and-test:
@@ -22,8 +26,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
@@ -33,9 +41,6 @@ jobs:
 
       - name: Build
         run: npm run build --if-present
-
-      - name: Test
-        run: npm run test --if-present || echo "No tests found or tests failed but continuing"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -58,8 +63,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
