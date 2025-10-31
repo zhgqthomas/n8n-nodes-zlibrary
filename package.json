@@ -1,0 +1,55 @@
+{
+	"name": "n8n-nodes-zlibrary",
+	"version": "0.1.0",
+	"description": "A collection of n8n nodes for interacting with the ZLibrary API.",
+	"license": "MIT",
+	"homepage": "https://github.com/zhgqthomas/n8n-nodes-zlibrary",
+	"keywords": [
+		"n8n-community-node-package",
+		"n8n",
+		"n8n-node",
+		"zlibrary",
+		"zlib"
+	],
+	"author": {
+		"name": "Thomas",
+		"email": "zhgqthomas@outlook.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/zhgqthomas/n8n-nodes-zlibrary.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/ZlibApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Zlib/Zlib.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "*",
+		"@types/node": "^24.9.2",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"release-it": "^19.0.4",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
