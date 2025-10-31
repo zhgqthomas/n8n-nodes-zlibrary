@@ -21,9 +21,6 @@ jobs:
   release:
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +75,6 @@ jobs:
           generate_release_notes: true
 
       - name: Publish to npm
-        run: npm publish
+        run: npm publish --access public --provenance
         env:
           RELEASE_MODE: "1"
