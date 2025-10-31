@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-zlibrary",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "A collection of n8n nodes for interacting with the ZLibrary API.",
 	"license": "MIT",
 	"homepage": "https://github.com/zhgqthomas/n8n-nodes-zlibrary",
