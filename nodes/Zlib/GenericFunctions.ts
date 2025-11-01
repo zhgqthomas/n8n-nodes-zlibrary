@@ -3,6 +3,8 @@ import {
 	IHookFunctions,
 	IHttpRequestOptions,
 	ILoadOptionsFunctions,
+	JsonObject,
+	NodeApiError,
 } from 'n8n-workflow';
 import { CREDENTIAL_NAME } from './Constants';
 
@@ -13,6 +15,7 @@ async function zlibApiRequestWithAuthentication(
 ) {
 	const credentials = await this.getCredentials(CREDENTIAL_NAME);
 	options.baseURL = credentials?.baseUrl as string;
+	if (options.json === undefined) options.json = true;
 
 	const additionalCredentialOptions = {
 		credentialsDecrypted: {
@@ -38,5 +41,13 @@ export async function zlibApiRequest(
 	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions,
 	options: IHttpRequestOptions,
 ) {
-	return zlibApiRequestWithAuthentication.call(this, options);
+	return zlibApiRequestWithAuthentication.call(this, options).catch(async (error) => {
+		if (error.context && error.context.data) {
+			const { error: apiError } = error.context.data;
+
+			throw new NodeApiError(this.getNode(), error as JsonObject, {
+				message: `Request Zlib API Error: ${apiError}`,
+			});
+		}
+	});
 }
