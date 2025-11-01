@@ -161,6 +161,23 @@ export const bookFields: INodeProperties[] = [
 				],
 			},
 			{
+				displayName: 'Type of Content',
+				name: 'types',
+				type: 'multiOptions',
+				description: 'File types to filter the search results by',
+				default: [],
+				options: [
+					{
+						name: 'Articles',
+						value: 'article',
+					},
+					{
+						name: 'Books',
+						value: 'book',
+					},
+				],
+			},
+			{
 				displayName: 'Year From',
 				name: 'yearFrom',
 				type: 'number',

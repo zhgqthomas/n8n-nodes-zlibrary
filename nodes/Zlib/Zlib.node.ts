@@ -79,6 +79,7 @@ export class Zlib implements INodeType {
 
 						const options = this.getNodeParameter('options', itemIndex, {}) as IDataObject;
 						const extensions = (options.extensions as string[]) || undefined;
+						const types = (options.types as string[]) || undefined;
 						const yearFrom = options.yearFrom as number | undefined;
 						const yearTo = options.yearTo as number | undefined;
 
@@ -100,6 +101,12 @@ export class Zlib implements INodeType {
 						if (extensions?.length) {
 							for (const extension of extensions) {
 								params.append('extensions[]', extension);
+							}
+						}
+
+						if (types?.length) {
+							for (const type of types) {
+								params.append('types[]', type);
 							}
 						}
 
