@@ -127,43 +127,55 @@ export class Zlib implements INodeType {
 						// ----------------------------------
 						const bookId = this.getNodeParameter('bookId', itemIndex) as string;
 						const bookHashId = this.getNodeParameter('bookHashId', itemIndex) as string;
+						const downloadFile = this.getNodeParameter('downloadFile', itemIndex, false) as boolean;
 
-						const {
-							file: { allowDownload, downloadLink },
-						} = await zlibApiRequest.call(this, {
+						responseData = await zlibApiRequest.call(this, {
 							method: 'GET',
 							url: `/book/${bookId}/${bookHashId}/file`,
 						});
 
-						if (!allowDownload) {
-							throw new NodeApiError(
-								this.getNode(),
-								{
-									message: 'Download not allowed for this book',
-								},
-								{
-									itemIndex: itemIndex,
-								},
+						if (!downloadFile) {
+							// Return download link
+							const executionData = this.helpers.constructExecutionMetaData(
+								this.helpers.returnJsonArray(responseData as unknown as IDataObject),
+								{ itemData: { item: itemIndex } },
 							);
+							returnData.push(...executionData);
+						} else {
+							const {
+								file: { downloadLink },
+							} = responseData;
+
+							if (!downloadLink) {
+								throw new NodeApiError(
+									this.getNode(),
+									{
+										message: 'No Download link  for this book',
+									},
+									{
+										itemIndex: itemIndex,
+									},
+								);
+							}
+
+							const binary = await this.helpers.httpRequest.call(this, {
+								method: 'GET',
+								url: downloadLink,
+								encoding: 'arraybuffer',
+								json: false,
+							});
+
+							const binaryData = await this.helpers.prepareBinaryData(binary);
+							const newItem: INodeExecutionData = {
+								json: {},
+								binary: {
+									['data']: binaryData,
+								},
+								pairedItem: { item: itemIndex },
+							};
+
+							returnData.push(newItem);
 						}
-
-						const binary = await this.helpers.httpRequest.call(this, {
-							method: 'GET',
-							url: downloadLink,
-							encoding: 'arraybuffer',
-							json: false,
-						});
-
-						const binaryData = await this.helpers.prepareBinaryData(binary);
-						const newItem: INodeExecutionData = {
-							json: {},
-							binary: {
-								['data']: binaryData,
-							},
-							pairedItem: { item: itemIndex },
-						};
-
-						returnData.push(newItem);
 					}
 				}
 			} catch (error) {

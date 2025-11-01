@@ -217,11 +217,24 @@ export const bookFields: INodeProperties[] = [
 		},
 	},
 	{
-		displayName: 'Book Hash ID',
+		displayName: 'Book Hash',
 		name: 'bookHashId',
 		type: 'string',
 		default: '',
 		required: true,
+		displayOptions: {
+			show: {
+				resource: ['book'],
+				operation: ['download'],
+			},
+		},
+	},
+	{
+		displayName: 'Download File',
+		name: 'downloadFile',
+		type: 'boolean',
+		default: false,
+		description: 'Whether to download the book file or just get the download link',
 		displayOptions: {
 			show: {
 				resource: ['book'],
